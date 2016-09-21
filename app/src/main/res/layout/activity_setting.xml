@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.cl.temptrack.temptrack.SettingActivity"
     android:orientation="vertical">
+    <Spinner
+        android:id="@+id/set_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/test_time_delay"
+        android:prompt="@string/choose_time_delay"/>
 
 
 </LinearLayout>

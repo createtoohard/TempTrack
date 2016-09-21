@@ -6,4 +6,5 @@
     <string name="toast_can_not_start_app">can not start app</string>
     <string name="toast_choose_app">choose app</string>
     <string name="toast_test_over">i\'m out and test over</string>
+    <string name="choose_time_delay"> 请选择几分钟后获取测试信息 </string>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="test_time_delay">
+        <item>5 分钟 </item>
+        <item>10 分钟 </item>
+        <item>15 分钟 </item>
+        <item>20 分钟 </item>
+        <item>25 分钟 </item>
+        <item>30 分钟 </item>
+    </string-array>
+</resources>

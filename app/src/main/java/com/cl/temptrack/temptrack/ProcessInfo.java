@@ -176,4 +176,20 @@ public class ProcessInfo {
         else
             return null;
     }
+
+    public boolean isForeground(Context context, String packageName) {
+        if (packageName.equals("") | packageName == null)
+            return false;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am
+                .getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo runinfo : runningAppProcesses) {
+            String pn = runinfo.processName;
+            if (pn.equals(packageName)
+                    && runinfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                if (DEBUG) Log.e(TAG, "is foreground packagename = " + pn);
+                return true;
+        }
+        return false;
+    }
 }
