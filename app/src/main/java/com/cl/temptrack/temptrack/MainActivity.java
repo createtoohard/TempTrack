@@ -272,6 +272,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 //                finish();
 //            }
             Toast.makeText(this,R.string.toast_test_over,Toast.LENGTH_SHORT).show();
+            unregisterReceiver(mReceiver);
             finish();
             return true;
         }
@@ -285,4 +286,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
+    }
 }
