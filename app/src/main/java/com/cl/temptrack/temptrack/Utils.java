@@ -240,7 +240,7 @@ public class Utils {
             dos.flush();
             reader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));
 
-            fw = new FileWriter(saveFileName);
+            fw = new FileWriter(saveFileName, true);
             writer = new BufferedWriter(fw);
 
             while ((line = reader.readLine()) != null) {

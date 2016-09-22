@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Process;
 import android.support.annotation.Nullable;
@@ -29,6 +30,8 @@ public class MonitorService extends Service {
     public static final String SERVICE_ACTION = "com.cl.temptrack.action.MonitorService";
     private static final String BATTERY_CHANGED = "android.intent.action.BATTERY_CHANGED";
     private Process mProcess;
+    private Handler mHandler = new Handler();
+    private int cpucount = 0;
     private String resultDir;
 
     private BatteryReceiver mBatteryReceiver;
@@ -66,11 +69,14 @@ public class MonitorService extends Service {
                 String temperature = String.valueOf(intent.getIntExtra(
                         BatteryManager.EXTRA_TEMPERATURE, -1) * 1.0 / 10);
                 if(DEBUG) Log.e(TAG, "Battery temperature = " + temperature);
-                readMemoryInfo();
+                resultDir = makeDir();
+//                readMemoryInfo();
                 saveMemoryInfo();
-                readCpuInfo();
-                saveCpuInfo();
+//                readCpuInfo();
+//                saveCpuInfo();
                 savePsInfo();
+                mHandler.postDelayed(runnable,0);
+
                 unregisterReceiver(mBatteryReceiver);
             }
         }
@@ -87,7 +93,7 @@ public class MonitorService extends Service {
     }
 
     private void saveMemoryInfo() {
-        String memoryInfoTestResultPath = makeDir() + "/memoryinfo.csv";
+        String memoryInfoTestResultPath = resultDir + "/memoryinfo.csv";
         String memoryInfoPath = "proc/meminfo";
         if (Utils.isSdCardExist()) {
             Utils.saveFileByCsv(memoryInfoPath, memoryInfoTestResultPath, ":");
@@ -97,15 +103,15 @@ public class MonitorService extends Service {
 
     private void saveCpuInfo() {
         String cpuInfoPath = "/sys/devices/system/cpu/cpufreq/all_time_in_state";
-        String cpuInfoTestResultPath = makeDir() + "/cpuinfo.csv";
+        String cpuInfoTestResultPath = resultDir + "/memoryinfo.csv";
         if (Utils.isSdCardExist()) {
-            Utils.saveFileByCsv(cpuInfoPath, cpuInfoTestResultPath, "\\s{1,}");
+            Utils.saveFileByCsv(cpuInfoPath, cpuInfoTestResultPath, "\t");
             if (DEBUG) Log.e(TAG, "----------save cpuinfo successful----------");
         }
     }
 
     private void savePsInfo() {
-        String psInfoTestResultPath = makeDir() + "/psInfo.csv";
+        String psInfoTestResultPath = resultDir + "/memoryinfo.csv";
         if (Utils.isSdCardExist()) {
             Utils.saveCommandInfoByCsv("ps", psInfoTestResultPath);
             if (DEBUG) Log.e(TAG, "----------save psinfo successful----------");
@@ -139,6 +145,21 @@ public class MonitorService extends Service {
         Log.e(TAG, "result dir path = " + resultFile.getAbsolutePath());
         return resultFile.getAbsolutePath();
     }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.e(TAG,"----------------------COUTN = " + cpucount + "---------------------------");
+            if (cpucount == 3) {
+                mHandler.removeCallbacks(this);
+                cpucount = 0;
+            } else {
+                saveCpuInfo();
+                cpucount++;
+                mHandler.postDelayed(this,1000);
+            }
+        }
+    };
 
 
 }

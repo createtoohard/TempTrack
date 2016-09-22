@@ -150,6 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Toast.makeText(MainActivity.this, getString(R.string.toast_choose_app), Toast.LENGTH_LONG).show();
             }
         } else {
+            Log.e(TAG,"STOP SERVICE====================================");
             mStartTestBtn.setText(getString(R.string.start_test));
             stopService(mMonitorIntent);
         }
@@ -273,6 +274,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 //            }
             Toast.makeText(this,R.string.toast_test_over,Toast.LENGTH_SHORT).show();
             unregisterReceiver(mReceiver);
+            stopService(new Intent(MainActivity.this, MonitorService.class));
             finish();
             return true;
         }
